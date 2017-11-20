@@ -152,6 +152,15 @@ public class StageHandler {
 		}break;
 		case 6:{
 			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
+       	replymsg="Please enter you budget.";
+				//database.pushUser(currentUser);
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+			}
+			else
+				replymsg="Please enter reasonable numbers!";
+		}break;
+		case 6:{
+			if(inputChecker.BudgetEditting(text, currentUser, database, "set")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
 				//database.pushUser(currentUser);
        			currentUser.setStage("Main");
