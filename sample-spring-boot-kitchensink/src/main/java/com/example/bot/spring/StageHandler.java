@@ -156,7 +156,6 @@ public class StageHandler {
 				//log.info("Stage error.");
 			}
 		}
-
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
@@ -1255,7 +1254,7 @@ public class StageHandler {
 		currentUser.setStage("Main");//back to main
 		currentUser.setSubStage(0);
 		database.updateUser(currentUser);//update user stage when the stage has been changed
-		return replymsg;
+		return replyms
 	}*/
 
 	/**
@@ -1268,18 +1267,22 @@ public class StageHandler {
 	*/
 	public String couponHandler(   String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
-		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
+		//if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
+		if(CouponWarehouse.getInstance().isCodeValid(text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
 			// if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) )
 			  replymsg += "@@" + newCoupon.getCoupon();
-			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@"+newCoupon.getInviter();
+			  if( !CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) || //check whether inviter can get coupon more
+				    !CouponWarehouse.getInstance().gotCouponNewUsers(newCoupon.getInviter())) replymsg += "@@"+newCoupon.getInviter();
 				else replymsg += "@@" + "-1"; // dummy representation for not sending
 
 			 	replymsg += "@@" + newCoupon.getInvitee();
-									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-									log.info(replymsg);
-									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-
+				log.info("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+				log.info(Boolean.toString(CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter())));
+				log.info(Boolean.toString(CouponWarehouse.getInstance().gotCouponNewUsers(newCoupon.getInviter())));
+				log.info("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+				if(CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()))
+				 	 CouponWarehouse.getInstance().insertGotCouponNewUsers(newCoupon.getInviter());
 		}
 		else{
 			replymsg = "oops! Your code is either invalid or used. (You can not get coupon by the code issued to yourself)";
@@ -1420,7 +1423,8 @@ public class StageHandler {
 					+ "Please first tell us some of your personal information: type anything to continue";
 			currentUser = new Users(event.getSource().getUserId());
 			database.pushUser(currentUser); // push new user
-			CouponWarehouse.getInstance().register(currentUser);
+			if(CouponWarehouse.isCampaignStarted())
+				CouponWarehouse.getInstance().register(currentUser);
 		}finally {
 			database.updateUser(currentUser);//update user stage when the stage has been changed
 		}

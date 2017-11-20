@@ -404,7 +404,7 @@ public class KitchenSinkController {
 				Thread.currentThread().interrupt();
 			}
 		//});
-		//chatbotThread.start();
+		//chatbotThread.start()
 	}
 	/*
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {

@@ -116,10 +116,14 @@ public class CouponWarehouse{
     }
   }
 
-  //Fetch user ids from the database and store.
+  //Fetch user ids from the database and store it
   private static void fetchUsers(){
     SQLDatabaseEngine db = new SQLDatabaseEngine();
     existingUids = db.fetchUIDs();
+    String a = "";
+    for(String nu:existingUids) a += "@@"+ nu;
+    log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    log.info(a);
   }
 
   // Construct a unique object of CouponWarehouse.
@@ -207,6 +211,14 @@ public class CouponWarehouse{
   }
 
   /**
+  * Insert the user to the list indicating that the user is a new user and got coupon already.
+  *@param uid User id of String type
+  */
+  public void insertGotCouponNewUsers(String uid){
+    gotCouponNewUsers.add(uid);
+  }
+
+  /**
   * Cast and Issue a coupon of the given code.
   * @param invitee The asker of the coupon
   * @param code Code of the coupon
@@ -225,7 +237,6 @@ public class CouponWarehouse{
       if(found){
         coupons.get(i).setInvitee(invitee);
         if( ! gotCouponNewUsers.contains(coupons.get(i).getInviter()) ) couponsRemaining--;
-        gotCouponNewUsers.add(coupons.get(i).getInviter());
         gotCouponNewUsers.add(invitee);
         return coupons.get(i);
       }
@@ -240,6 +251,13 @@ public class CouponWarehouse{
   * @param code Code to check
   * @return The validity of code along with user source
   */
+  public boolean isCodeValid(String code){
+    for(Coupon c : coupons){
+      if(c.getCode().equals(code)) { return true;}
+    }
+    return false;
+  }
+  /*
   public boolean isCodeValid(String invitee,String code){
     for(Coupon c : coupons){
       if(c.getCode().equals(code)) {
@@ -252,7 +270,7 @@ public class CouponWarehouse{
       }
     }
     return false;
-  }
+  }*/
   /**
   * Checks if coupons still remain.
   * @return Remaining coupon numbers
@@ -284,7 +302,18 @@ public class CouponWarehouse{
   * @return whether a user is qualified to get coupon from entering code
   */
   public boolean canGetCouponFromCode(Users user){
+    String a = "";
+    for(String nu:newUids) a += "@@"+ nu;
+    String b = "";
+    for(String nu:existingUids) b += "@@"+ nu;
+    log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    log.info(a);
+    log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    log.info(b);
     if (isNewUser(user)){
+      log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+      log.info("User is not old");
+      log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
       return (!gotCouponNewUsers.contains(user.getID()));
     }
     else return false;
@@ -315,7 +344,7 @@ public class CouponWarehouse{
   * @param uid User id of String types
   * @return if a user of user id has receieve a coupon
   */
-  public boolean notGotCoupon(String uid){
+  public boolean gotCouponNewUsers(String uid){
     return gotCouponNewUsers.contains(uid);
   }
 
