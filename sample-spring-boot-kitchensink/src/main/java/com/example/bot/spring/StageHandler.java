@@ -144,6 +144,15 @@ public class StageHandler {
 		}break;
 		case 5:{
 			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
+       	replymsg="Please enter you budget.";
+				//database.pushUser(currentUser);
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+			}
+			else
+				replymsg="Please enter reasonable numbers!";
+		}break;
+		case 6:{
+			if(inputChecker.BudgetEditting(text, currentUser, database, "set")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
 				//database.pushUser(currentUser);
        			currentUser.setStage("Main");
@@ -525,8 +534,8 @@ public class StageHandler {
 			 * Update corresponding user's "diet_plan" table based on his/her information
 			 * */
 			String user_id = currentUser.getID();
-			//double budget = currentUser.getBudget();
-			double budget = 100;
+			double budget = currentUser.getBudget();
+			// double budget = 100;
 			if (database.search_diet_plan(user_id)) {
 				replymsg = "You've already generated a diet plan:\n\n";
 				replymsg += database.display_diet_plan(user_id, budget);
@@ -553,8 +562,8 @@ public class StageHandler {
 			replymsg = "Reminder List:\n";
 			try {
 				String user_id = currentUser.getID();
-				//double budget = currentUser.getBudget();
-				double budget = 100;
+				double budget = currentUser.getBudget();
+				// double budget = 100;
 
 				// Instantiate a Date object
 				Date dNow = new Date();
