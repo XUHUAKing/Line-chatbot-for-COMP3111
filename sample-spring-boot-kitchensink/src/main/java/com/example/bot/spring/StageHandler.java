@@ -143,6 +143,14 @@ public class StageHandler {
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 5:{
+			if( inputChecker.BudgetEditting(text,currentUser,database,"set") ) {
+				replymsg="Please enter your budget:";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+			}
+			else
+				replymsg="Please enter reasonable numbers!";
+		}break;
+		case 6:{
 			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
        	replymsg="Please enter you budget.";
 				//database.pushUser(currentUser);
@@ -535,7 +543,7 @@ public class StageHandler {
 			 * */
 			String user_id = currentUser.getID();
 			double budget = currentUser.getBudget();
-			// double budget = 100;
+			//double budget = 100;
 			if (database.search_diet_plan(user_id)) {
 				replymsg = "You've already generated a diet plan:\n\n";
 				replymsg += database.display_diet_plan(user_id, budget);
