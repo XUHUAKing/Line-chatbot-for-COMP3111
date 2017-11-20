@@ -275,6 +275,35 @@ public class SQLDatabaseEngineTester {
 
 		assertThat(!thrown).isEqualTo(true);
 	}
+	
+	//test searchLink
+	@Test
+	public void testSearchLink() throws Exception {
+		boolean thrown = false;
+		//can search
+		String link = databaseEngine.searchLink(2);
+		if (link == "") {
+			thrown = true;
+		}
+		//cant search
+		link = databaseEngine.searchLink(100);
+		if (link != "") {
+			thrown = true;
+		}
+		assertThat(!thrown).isEqualTo(true);
+	}
+	
+	//test countLink
+	@Test
+	public void testCountLink() throws Exception {
+		boolean thrown = false;
+		//can search
+		int num_link = databaseEngine.countLink();
+		if (num_link == 0) {
+			thrown = true;
+		}
+		assertThat(!thrown).isEqualTo(true);
+	}
 
 
 //	@Test
